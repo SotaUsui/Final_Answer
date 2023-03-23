@@ -30,7 +30,7 @@ while(count < 50):
     if (i == len(restraunts)):
         pages = soup.find(class_="style_pages__Y9bbR")
         page =(pages.find_all('a'))
-        next_page = (page[9].get('href'))
+        next_page = (page[9].get('href')) #I though it was 7 not 9.
         next_page = "https://r.gnavi.co.jp"+next_page
         response = requests.get(next_page)
         soup = BeautifulSoup(response.text, 'html.parser')
@@ -38,3 +38,32 @@ while(count < 50):
         i =0
 
 print(r_url)
+
+name =[]
+phone =[]
+email =[]
+prefecture =[]
+city = []
+address =[]
+building =[]
+own_url =[]
+ssl =[]
+
+for i in r_url:
+
+
+
+
+data = {
+        '店舗名': name,
+        '電話番号': phone,
+        'メールアドレス': email,
+        '都道府県': prefecture,
+        '市区町村': city,
+        '番地': address,
+        '建物名': building,
+        'URL': own_url,
+        'SSL': ssl
+        }
+df = pd.DataFrame(data)
+df.to_csv("1-1.csv", encoding="shift_jis")
