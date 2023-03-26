@@ -16,7 +16,7 @@ soup = BeautifulSoup(response.text, 'html.parser')
 restraunts = soup.find_all(class_="style_titleLink__oiHVJ")
 
 url_list = []
-count =0
+count =1
 i =0
 
 while(count < 50):
@@ -43,8 +43,8 @@ building =[]
 own_url =[]
 ssl =[]
 
-for url in url_list:
-    response = requests.get(url)
+for i_url in url_list:
+    response = requests.get(i_url)
     soup = BeautifulSoup(response.content, 'html.parser')
     
     #name
