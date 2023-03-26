@@ -15,7 +15,7 @@ response = requests.get(url)
 soup = BeautifulSoup(response.text, 'html.parser')
 restraunts = soup.find_all(class_="style_titleLink__oiHVJ")
 
-r_url = []
+url_list = []
 count =0
 i =0
 #f = open("output.txt", "w")
@@ -23,7 +23,7 @@ while(count < 50):
     #f.write(restraunts[i].getText())
     #f.write(':')
     #f.write(restraunts[i].get('href'))
-    r_url.append(restraunts[i].get('href'))
+    url_list.append(restraunts[i].get('href'))
     #f.write("\n")
     count +=1
     i +=1
@@ -37,8 +37,8 @@ while(count < 50):
         restraunts = soup.find_all(class_="style_titleLink__oiHVJ")
         i =0
 
-print(r_url)
-
+print(url_list)
+print("--")
 name =[]
 phone =[]
 email =[]
@@ -49,8 +49,47 @@ building =[]
 own_url =[]
 ssl =[]
 
-for i in r_url:
+for url in url_list:
+    response = requests.get(url)
+    soup = BeautifulSoup(response.content, 'html.parser')
+    
+    #name
+    store_name = soup.find(class_ = 'fn org summary')
+    store_name = store_name.text
+    store_name = re.sub(r'\xa0', '', store_name)
+    name.append(store_name)
 
+    #phone
+    store_phone = soup.find(class_ = 'number')
+    store_phone = store_phone.text
+    phone.append(store_phone)
+
+    #email
+    email.append("") #I couldn't find any class of email
+    
+    #prefecture/city/address
+    place = soup.find(class_ = 'region')
+    place = place.text
+    pattern = r"^(.+?[都道府県])(.+?[市区町村])(.+)$"
+    match = re.match(pattern, place)
+    prefecture.append(match.group(1))
+    city.append(match.group(2))
+    address.append(match.group(3))
+
+    #building
+    store_building = soup.find(class_ = 'locality')
+    print(store_building)
+    if store_building == None:
+        building.append('')
+    else:
+        store_building = store_building.text
+        building.append(store_building)
+
+    #own_url
+    own_url.append("")
+
+    #ssl
+    ssl.append("")
 
 
 
@@ -66,4 +105,4 @@ data = {
         'SSL': ssl
         }
 df = pd.DataFrame(data)
-df.to_csv("1-1.csv", encoding="shift_jis")
+df.to_csv("1-1.csv", index=False)
