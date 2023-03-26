@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import requests, re
+import requests, re, time
 import pandas as pd
 from bs4 import BeautifulSoup
 
@@ -10,7 +10,7 @@ user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36
 header = {
     'User-Agent': user_agent
 }
-
+time.sleep(3)
 response = requests.get(url)
 soup = BeautifulSoup(response.text, 'html.parser')
 restraunts = soup.find_all(class_="style_titleLink__oiHVJ")
@@ -18,13 +18,9 @@ restraunts = soup.find_all(class_="style_titleLink__oiHVJ")
 url_list = []
 count =0
 i =0
-#f = open("output.txt", "w")
+
 while(count < 50):
-    #f.write(restraunts[i].getText())
-    #f.write(':')
-    #f.write(restraunts[i].get('href'))
     url_list.append(restraunts[i].get('href'))
-    #f.write("\n")
     count +=1
     i +=1
     if (i == len(restraunts)):
@@ -37,8 +33,6 @@ while(count < 50):
         restraunts = soup.find_all(class_="style_titleLink__oiHVJ")
         i =0
 
-print(url_list)
-print("--")
 name =[]
 phone =[]
 email =[]
@@ -78,7 +72,7 @@ for url in url_list:
 
     #building
     store_building = soup.find(class_ = 'locality')
-    print(store_building)
+
     if store_building == None:
         building.append('')
     else:
