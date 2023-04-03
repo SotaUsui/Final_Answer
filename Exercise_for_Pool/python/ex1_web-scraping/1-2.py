@@ -19,22 +19,25 @@ driver.maximize_window()
 
 elements = driver.find_elements(By.CLASS_NAME, "style_titleLink__oiHVJ")
 url_list = []
-count =1
+count =0
 i=0
+page =1
 while count < 50:
-    url = elements[i].get_attribute("href")
-    url_list.append(url)
+    s_url = elements[i].get_attribute("href")
+    url_list.append(s_url)
     count +=1
     i +=1
     if i == 20:
-        page_list =driver.find_elements_by_xpath('//ul[@class="style_pages__Y9bbR"]/li')
-        print("-------------")
-        print(page_list)
-        link_next = page_list[9].get_attribute("href")
-        link_next.click()
+        page +=1
+        n_url =url+"&p="+str(page)
+        driver.get(n_url)
         elements = driver.find_elements(By.CLASS_NAME, "style_titleLink__oiHVJ")
         i =0
 print(url_list)
+print('------------')
+print(len(url_list))
+print('---------')
+print(url_list[49])
 driver.quit()
 
 
