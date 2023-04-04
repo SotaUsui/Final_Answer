@@ -28,11 +28,14 @@ while count < 50:
     count +=1
     i +=1
     if i == 20:
-        page +=1
-        n_url =url+"&p="+str(page)
-        driver.get(n_url)
+        ul_element = driver.find_element(By.CSS_SELECTOR,'ul.style_pages__Y9bbR')
+        li_elements = ul_element.find_elements(By.CSS_SELECTOR, 'li')
+        next_page = li_elements[9]
+        next_page.click()
+        next_url = driver.current_url
+        driver.get(next_url)
         elements = driver.find_elements(By.CLASS_NAME, "style_titleLink__oiHVJ")
-        i =0
+        i=0
 
 name =[]
 phone =[]
@@ -43,7 +46,6 @@ address =[]
 building =[]
 own_url =[]
 ssl =[]
-
 for store in url_list:
     driver.get(store)
     #name
@@ -52,10 +54,53 @@ for store in url_list:
 
     #phone
     store_phone = driver.find_element(By.CLASS_NAME, "number").text
-    print(store_phone)
     phone.append(store_phone)
 
+    #email
+    email.append('')
 
+    #prefecture/city/address
+    place = driver.find_element(By.CLASS_NAME, "region").text
+    pattern = r"^(.+?[都道府県])(.+?[市区町村])(.+)$"
+    match = re.match(pattern, place)
+    prefecture.append(match.group(1))
+    city.append(match.group(2))
+    address.append(match.group(3))
+
+    #building
+    try:
+        store_building = driver.find_element(By.CLASS_NAME, "locality").text
+        building.append(store_building)
+
+    except:
+        building.append('')
+
+    #own_url/ssl
+    try:
+        element = driver.find_element(By.CSS_SELECTOR, ".unit-box.line.cx .clickable a")
+        store_url = element.get_attribute("href")
+        own_url.append(store_url)
+        if store_url.startswith("https://"):
+            ssl.append('TRUE')
+        else:
+            ssl.append('False')
+    except:
+        own_url.append('')
+        ssl.append('')
+
+data = {
+        '店舗名': name,
+        '電話番号': phone,
+        'メールアドレス': email,
+        '都道府県': prefecture,
+        '市区町村': city,
+        '番地': address,
+        '建物名': building,
+        'URL': own_url,
+        'SSL': ssl
+        }
+df = pd.DataFrame(data)
+df.to_csv("1-2.csv", index=False)
 
 driver.close()
 driver.quit()
