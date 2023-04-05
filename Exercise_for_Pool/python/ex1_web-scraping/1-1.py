@@ -10,9 +10,11 @@ user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36
 header = {
     'User-Agent': user_agent
 }
+
+r = requests.get(url)
 time.sleep(3)
-response = requests.get(url)
-soup = BeautifulSoup(response.text, 'html.parser')
+
+soup = BeautifulSoup(r.text, 'html.parser')
 restraunts = soup.find_all(class_="style_titleLink__oiHVJ")
 
 url_list = []
@@ -99,4 +101,4 @@ data = {
         'SSL': ssl
         }
 df = pd.DataFrame(data)
-df.to_csv("1-1.csv", index=False)
+df.to_csv("1-1.csv", encoding='utf_8_sig',index=False)
