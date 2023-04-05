@@ -11,8 +11,8 @@ header = {
     'User-Agent': user_agent
 }
 
-r = requests.get(url)
 time.sleep(3)
+r = requests.get(url)
 
 soup = BeautifulSoup(r.text, 'html.parser')
 restraunts = soup.find_all(class_="style_titleLink__oiHVJ")
