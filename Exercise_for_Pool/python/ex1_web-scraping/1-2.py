@@ -8,12 +8,13 @@ from selenium.webdriver.common.by import By
 path = "/Users/usuisota/Downloads/chromedriver"
 driver = webdriver.Chrome(executable_path= path)
 
-time.sleep(3)
-url ='https://r.gnavi.co.jp/area/jp/western/rs/?date=20230326'
+url ='https://r.gnavi.co.jp/area/jp/rs/?fw=%E3%81%AF%E3%81%BE%E3%81%90%E3%82%8A/'
 user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTM    L, like Gecko) Chrome/111.0.0.0 Safari/537.36'
 header = {
         'User-Agent': user_agent
         }
+
+time.sleep(3)
 driver.get(url)
 driver.maximize_window()
 
@@ -57,7 +58,13 @@ for store in url_list:
     phone.append(store_phone)
 
     #email
-    email.append('')
+    try:
+        element = driver.find_element(By.CSS_SELECTOR,'a[href^="mailto:"]')
+        store_email = element.get_attribute('href').replace('mailto:', '')
+        email.append(store_email)
+
+    except:
+        email.append('')
 
     #prefecture/city/address
     place = driver.find_element(By.CLASS_NAME, "region").text
@@ -100,7 +107,7 @@ data = {
         'SSL': ssl
         }
 df = pd.DataFrame(data)
-df.to_csv("1-2.csv", index=False)
+df.to_csv("1-2.csv", encoding='utf_8_sig', index=False)
 
 driver.close()
 driver.quit()
